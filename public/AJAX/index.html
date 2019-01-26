@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <title></title>
+    <style type="text/css">
+        *{margin: 0;
+        padding: 0;}
+        html{
+            font-size: 14px;
+        }
+        #content{
+            width: 800px;
+            margin: 0 auto;
+            box-shadow:0 0 5px #666;
+        }
+        li{
+            list-style-type: none;padding-left: 5px;
+            height: 20px;
+            line-height: 20px;
+        }
+        li a{
+            color: blue;
+            text-decoration: none;
+        }
+        li .title{
+            color: black;
+        }
+        li span{
+            float: right;padding-right: 5px;color: #727171;font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+<div style="width: 962px;margin: 0 auto">
+    <img src="images/news.png" height="108" width="962"/>
+</div>
+<div id="content">
+    <!--
+    <ul>
+        <li>
+            <a href="">[社会]</a>黄河变清调查:每年泥沙减少7亿吨 大洪水几率增加<a href=""></a><span>2017-10-12 18:09:00</span>
+        </li>
+        <li>
+            <a href="">[社会]</a>谷歌推出阿尔法围棋工具 要让机器教人类下棋<a href=""></a><span>2017-10-12 18:09:00</span>
+        </li>
+    </ul>
+    -->
+</div>
+</body>
+<script language="JavaScript">
+    var Ocontent = document.getElementById('content') ;
+    var oli = "";
+    var i = 0;
+    ajax({
+        type:'get',
+        url:'php/data.php',
+        data:'',
+        success: function (msg){
+            //console.log(msg);//typeof (msg)
+           var data = JSON.parse(msg);
+           console.log(data);
+           var oUL = document.createElement('ul');
+
+           for(var j = 0;j<data[i].length;j++) {
+               oli += '<li>' +
+                   '<a href="#">'+data[i][j].type+'</a>' +
+                   '<a href="#" class="title">'+data[i][j].title+'</a>' +
+                   '<span style="">2017-10-12 18:09:00</span>' +
+                   '</li>';
+           }
+            oUL.innerHTML=oli;
+            Ocontent.appendChild(oUL);
+        },
+        error: function(status) {
+            alert(status);
+        }
+    });//花括号中是对象
+    setInterval(function () {
+        ajax({
+            type:'get',
+            url:'php/data.php',
+            data:'',
+            success: function (msg){
+                //console.log(msg);//typeof (msg)
+                var data = JSON.parse(msg);
+                console.log(data);
+                var oUL = document.createElement('ul');
+                i++;
+                i %= data.length;
+                var oli = "";
+                for(var j = 0;j<data[i].length;j++) {
+                    oli += '<li>' +
+                        '<a href="#">'+data[i][j].type+'</a>' +
+                        '<a href="#" class="title">'+data[i][j].title+'</a>' +
+                        '<span style="">2017-10-12 18:09:00</span>' +
+                        '</li>';
+                }
+                oUL.innerHTML=oli;
+                Ocontent.appendChild(oUL);
+            },
+            error: function(status) {
+                alert(status);
+            }
+        });
+    },5000);
+    function ajax(mJson) {
+        var type = mJson.type;
+        var url = mJson.url;
+        var data = mJson.data;
+        var success = mJson.success;
+        var error = mJson.error;
+
+        var xmhr = new XMLHttpRequest();
+        xmhr.open(type,url,true);
+        xmhr.send();
+        xmhr.onreadystatechange = function () {
+            if(xmhr.readyState == 4){
+                if(xmhr.status == 200){
+                    success&&success(xmhr.responseText);
+                }else {
+                    error&&error(xmhr.status);
+                }
+            }
+        }
+    }
+</script>
+</html>

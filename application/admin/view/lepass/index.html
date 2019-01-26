@@ -1,0 +1,157 @@
+{extend name="admin@public/base_content" /} {block name="body">}
+
+<body>
+    <div class="container-fluid larry-wrapper">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <section class="panel panel-padding">
+                    <form name="LeAdd" class="layui-form" action="/admin/Lepass/change" method="post">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">帐号</label>
+                            <div class="layui-input-block">
+                                <input type="text" lay-verify="username" name="username" placeholder="请输入帐号" autocomplete="no" class="layui-input ">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">密码</label>
+                            <div class="layui-input-block">
+                                <input type="password" lay-verify="pass" name="pwd" placeholder="密码" autocomplete="no" class="layui-input ">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">密码确认</label>
+                            <div class="layui-input-block">
+                                <input type="password" lay-verify="pass" name="pwd2" placeholder="密码确认" autocomplete="no" class="layui-input ">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">所属角色</label>
+                            <div class="layui-input-inline" style="padding-left:28px;">
+                                <select name="nicename">
+                                    <option value="管理员">管理员</option>
+                                    <option value="客服">客服</option>
+                                    <option value="运营">运营</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">姓名</label>
+                            <div class="layui-input-block">
+                                <input type="text" lay-verify="name" name="remark" placeholder="姓名" autocomplete="off" class="layui-input ">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" pane>
+                            <label class="layui-form-label">性别</label>
+                            <div class="layui-input-inline" style="padding-left:28px;">
+                                <input type="radio" name="sex" title="男" value="1" checked />
+                                <input type="radio" name="sex" title="女" value="0" />
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">手机</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="tel" lay-verify="phone" placeholder="手机号码" autocomplete="off" class="layui-input ">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">邮箱</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="email" lay-verify="email" placeholder="邮箱" autocomplete="off" class="layui-input ">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" pane>
+                            <label class="layui-form-label">状态</label>
+                            <div class="layui-input-inline" style="padding-left:28px;">
+                                <input type="radio" name="status" title="启用" value="1" checked />
+                                <input type="radio" name="status" title="禁用" value="0" />
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit type="button" lay-filter="submit_button" >立即提交</button>
+                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </div>
+</body>
+
+{/block} {block name="script"}
+<script>
+    layui.use('form', function () {
+        var form = layui.form();
+        //刷新界面 所有元素
+        form.render();
+        form.verify({
+            name: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                    return '用户名不能有特殊字符';
+                }
+                if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                    return '用户名首尾不能出现下划线\'_\'';
+                }
+                if (/^\d+\d+\d$/.test(value)) {
+                    return '用户名不能全为数字';
+                }
+            }
+
+            //我们既支持上述函数式的方式，也支持下述数组的形式
+            //数组的两个值分别代表：[正则匹配、匹配不符时的提示文字]
+            , pass: [
+                /^[\S]{6,12}$/
+                , '密码必须6到12位，且不能出现空格'
+            ],username: [
+                /^[\S][a-z]+$/
+                , '账号必须为小写英文字符串'
+            ]
+        });
+        form.on("submit(submit_button)", function (data) {
+            var pwd = document.LeAdd.pwd.value;
+            var pwd2 = document.LeAdd.pwd2.value;
+            if (pwd != pwd2) {
+                alert("两次密码不相同！");
+            }
+            else {
+                document.LeAdd.submit();
+            }
+        });
+
+    });
+
+</script>
+<!-- <script type="text/javascript">  
+    function LeSubmit() {
+        
+        var username = document.LeAdd.username.value;
+        var pwd = document.LeAdd.pwd.value;
+        var pwd2 = document.LeAdd.pwd2.value;
+        var remark = document.LeAdd.remark.value;
+        var nicename = document.LeAdd.nicename.value;
+        var sex = document.LeAdd.sex.value;
+        var tel = document.LeAdd.tel.value;
+        var email = document.LeAdd.email.value;
+        var status = document.LeAdd.status.value;
+        //   console.log(username + pwd + pwd2 + remark + nicename + sex + tel + email + status);
+        if (pwd == '' || pwd == '' || pwd2 == '') {
+            alert("表单填写不完整");
+        }
+        else {
+            if (pwd != pwd2) {
+                alert("两次密码不相同！");
+            }
+            else {
+                document.LeAdd.submit();
+            }
+        }
+    }
+    form.on("submit(LeSubmit)", function (data) {
+            return false;
+        });
+</script> {/block} -->
+
+{/block}
