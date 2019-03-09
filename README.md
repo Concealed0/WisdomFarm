@@ -1,5 +1,5 @@
 
-# Wisdom
+# Wisdom      （第一代系统）
 From 506 by ange.
 =======
 # 智慧农业管理系统（基础版）
